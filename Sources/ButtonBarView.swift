@@ -93,6 +93,13 @@ open class ButtonBarView: UICollectionView {
             }
         } else {
             toFrame = layoutAttributesForItem(at: IndexPath(item: toIndex, section: 0))!.frame
+//            if toIndex == numberOfItems - 1 {
+//                // 最後のtabから右にスワイプした場合はindicatorが一番最初に戻る
+//                toFrame = layoutAttributesForItem(at: IndexPath(item: 0, section: 0))!.frame
+//
+//            } else {
+//                toFrame = layoutAttributesForItem(at: IndexPath(item: toIndex, section: 0))!.frame
+//            }
         }
 
         var targetFrame = fromFrame

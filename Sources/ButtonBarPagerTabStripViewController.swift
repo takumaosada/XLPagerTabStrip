@@ -234,10 +234,21 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         }
     }
 
+    // swipe移動の場合はこれが呼び出される
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int, withProgressPercentage progressPercentage: CGFloat, indexWasChanged: Bool) {
         guard shouldUpdateButtonBarView else { return }
         buttonBarView.move(fromIndex: fromIndex, toIndex: toIndex, progressPercentage: progressPercentage, pagerScroll: .yes)
         if let changeCurrentIndexProgressive = changeCurrentIndexProgressive {
+            
+            if fromIndex == 7 && toIndex == 8 && progressPercentage > 0.20 {
+                moveToViewController(at: 0)
+                return
+            }
+            if fromIndex == 0 && toIndex == -1 && progressPercentage > 0.20 {
+                moveToViewController(at: 7)
+                return
+            }
+            
             let oldIndexPath = IndexPath(item: currentIndex != fromIndex ? fromIndex : toIndex, section: 0)
             let newIndexPath = IndexPath(item: currentIndex, section: 0)
 

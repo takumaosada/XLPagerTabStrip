@@ -350,10 +350,12 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
                 fromIndex = count - 1
                 toIndex = count
             } else {
-                if self.scrollPercentage >= 0.5 {
-                    fromIndex = max(toIndex - 1, 0)
-                } else {
-                    toIndex = fromIndex + 1
+                if toIndex != 8 {
+                    if self.scrollPercentage >= 0.5 {
+                        fromIndex = max(toIndex - 1, 0)
+                    } else {
+                        toIndex = fromIndex + 1
+                    }
                 }
             }
         } else if direction == .right {
@@ -361,10 +363,12 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
                 fromIndex = 0
                 toIndex = -1
             } else {
-                if self.scrollPercentage > 0.5 {
-                    fromIndex = min(toIndex + 1, count - 1)
-                } else {
-                    toIndex = fromIndex - 1
+                if toIndex != -1 {
+                    if self.scrollPercentage > 0.5 {
+                        fromIndex = min(toIndex + 1, count - 1)
+                    } else {
+                        toIndex = fromIndex - 1
+                    }
                 }
             }
         }
