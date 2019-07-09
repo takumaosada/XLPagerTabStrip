@@ -266,7 +266,7 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
 
         let oldCurrentIndex = currentIndex
         let virtualPage = virtualPageFor(contentOffset: containerView.contentOffset.x)
-        let newCurrentIndex = pageFor(virtualPage: virtualPage)
+        let newCurrentIndex = virtualPage // pageFor(virtualPage: virtualPage)
         currentIndex = newCurrentIndex
         preCurrentIndex = currentIndex
         let changeCurrentIndex = newCurrentIndex != oldCurrentIndex
@@ -274,7 +274,13 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
         if let progressiveDelegate = self as? PagerTabStripIsProgressiveDelegate, pagerBehaviour.isProgressiveIndicator {
 
             let (fromIndex, toIndex, scrollPercentage) = progressiveIndicatorData(virtualPage)
-            progressiveDelegate.updateIndicator(for: self, fromIndex: fromIndex, toIndex: toIndex, withProgressPercentage: scrollPercentage, indexWasChanged: changeCurrentIndex)
+            if fromIndex == 8 {
+                moveToViewController(at: 0)
+            } else if fromIndex == -1 {
+                moveToViewController(at: 7)
+            } else {
+                progressiveDelegate.updateIndicator(for: self, fromIndex: fromIndex, toIndex: toIndex, withProgressPercentage: scrollPercentage, indexWasChanged: changeCurrentIndex)
+            }
         } else {
             delegate?.updateIndicator(for: self, fromIndex: min(oldCurrentIndex, pagerViewControllers.count - 1), toIndex: newCurrentIndex)
         }
@@ -350,12 +356,10 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
                 fromIndex = count - 1
                 toIndex = count
             } else {
-                if toIndex != 8 {
-                    if self.scrollPercentage >= 0.5 {
-                        fromIndex = max(toIndex - 1, 0)
-                    } else {
-                        toIndex = fromIndex + 1
-                    }
+                if self.scrollPercentage >= 0.5 {
+                    fromIndex = max(toIndex - 1, -1)
+                } else {
+                    toIndex = fromIndex + 1
                 }
             }
         } else if direction == .right {
@@ -363,16 +367,14 @@ open class PagerTabStripViewController: UIViewController, UIScrollViewDelegate {
                 fromIndex = 0
                 toIndex = -1
             } else {
-                if toIndex != -1 {
-                    if self.scrollPercentage > 0.5 {
-                        fromIndex = min(toIndex + 1, count - 1)
-                    } else {
-                        toIndex = fromIndex - 1
-                    }
+                if self.scrollPercentage > 0.5 {
+                    fromIndex = min(toIndex + 1, count)
+                } else {
+                    toIndex = fromIndex - 1
                 }
             }
         }
-        let scrollPercentage = pagerBehaviour.isElasticIndicatorLimit ? self.scrollPercentage : ((toIndex < 0 || toIndex >= count) ? 0.0 : self.scrollPercentage)
+        let scrollPercentage = pagerBehaviour.isElasticIndicatorLimit ? self.scrollPercentage : ((toIndex < -1 || toIndex >= count + 1) ? 0.0 : self.scrollPercentage)
         return (fromIndex, toIndex, scrollPercentage)
     }
 
