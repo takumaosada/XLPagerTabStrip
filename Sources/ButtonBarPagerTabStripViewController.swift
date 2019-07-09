@@ -238,7 +238,6 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         guard shouldUpdateButtonBarView else { return }
         buttonBarView.move(fromIndex: fromIndex, toIndex: toIndex, progressPercentage: progressPercentage, pagerScroll: .yes)
         if let changeCurrentIndexProgressive = changeCurrentIndexProgressive {
-            
             let oldIndexPath = IndexPath(item: currentIndex != fromIndex ? fromIndex : toIndex, section: 0)
             let newIndexPath = IndexPath(item: currentIndex, section: 0)
 
